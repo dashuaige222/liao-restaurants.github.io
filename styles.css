@@ -1159,9 +1159,60 @@ Hero横幅区域样式
 }
 
 /* 
+    ========================================
+    双转盘布局样式
+    ========================================
+*/
+
+/* 双转盘容器 */
+.dual-wheels-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 60px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+/* 单个转盘区域包装器 */
+.wheel-section-wrapper {
+    flex: 1;
+    min-width: 400px;
+    max-width: 500px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* 转盘区域头部 */
+.wheel-section-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 转盘区域标题 */
+.wheel-section-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* 转盘区域描述 */
+.wheel-section-desc {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* 
     转盘主体
     - 圆形容器
     - 使用CSS绘制扇区
+    - 默认为3扇区（每个扇区120度）
 */
 .wheel {
     width: 350px;
@@ -1170,12 +1221,9 @@ Hero横幅区域样式
     position: relative;
     background: conic-gradient(
         from 0deg,
-        #ff6b6b 0deg 60deg,
-        #4ecdc4 60deg 120deg,
-        #45b7d1 120deg 180deg,
-        #f9ca24 180deg 240deg,
-        #6c5ce7 240deg 300deg,
-        #fd79a8 300deg 360deg
+        #ff6b6b 0deg 120deg,
+        #4ecdc4 120deg 240deg,
+        #45b7d1 240deg 360deg
     );
     box-shadow: 
         0 0 0 8px var(--bg-white),
@@ -1215,7 +1263,7 @@ Hero横幅区域样式
     justify-content: center;
     /* 将文字定位到扇区中心偏外位置 */
     padding-top: 30px;
-    font-size: 0.95rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: var(--bg-white);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -1339,12 +1387,12 @@ Hero横幅区域样式
 
 /* 查看菜品按钮 */
 .result-btn {
-    width: 100%;
-    padding: 14px 30px;
+    width: auto;
+    padding: 10px 24px;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--bg-white);
-    border-radius: 25px;
-    font-size: 1.1rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
     font-weight: bold;
     transition: all var(--transition-normal);
     box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);

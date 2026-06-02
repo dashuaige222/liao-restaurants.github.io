@@ -579,29 +579,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     /**
      * ----------------------------------------
-     * 10. 幸运转盘抽取功能
+     * 10. 幸运转盘抽取功能（双转盘：东校和西校）
      * ----------------------------------------
+     * - 东校转盘：翰苑、博苑、慧苑
+     * - 西校转盘：湖苑、雅苑、楠苑
      * - 点击转盘中心按钮开始旋转
      * - 随机抽取餐厅或菜品
      * - 显示抽取结果
      */
-    
-    // 转盘相关DOM元素
-    const wheel = document.querySelector('.wheel');
-    const wheelCenter = document.querySelector('.wheel-center');
-    const wheelInner = document.querySelector('.wheel-inner');
-    const wheelResult = document.getElementById('wheelResult');
-    const viewDishBtn = document.getElementById('viewDishBtn');
-    
+
+    // 东校转盘相关DOM元素
+    const eastWheel = document.getElementById('eastWheel');
+    const eastWheelCenter = eastWheel ? eastWheel.querySelector('.wheel-center') : null;
+    const eastWheelInner = eastWheel ? eastWheel.querySelector('.wheel-inner') : null;
+    const eastWheelResult = document.getElementById('eastWheelResult');
+    const eastViewDishBtn = document.getElementById('eastViewDishBtn');
+
+    // 西校转盘相关DOM元素
+    const westWheel = document.getElementById('westWheel');
+    const westWheelCenter = westWheel ? westWheel.querySelector('.wheel-center') : null;
+    const westWheelInner = westWheel ? westWheel.querySelector('.wheel-inner') : null;
+    const westWheelResult = document.getElementById('westWheelResult');
+    const westViewDishBtn = document.getElementById('westViewDishBtn');
+
     // 转盘状态变量
-    let isSpinning = false; // 是否正在旋转
-    let currentRotation = 0; // 当前旋转角度
-    
+    let isEastSpinning = false; // 东校转盘是否正在旋转
+    let isWestSpinning = false; // 西校转盘是否正在旋转
+    let eastCurrentRotation = 0; // 东校转盘当前旋转角度
+    let westCurrentRotation = 0; // 西校转盘当前旋转角度
+    let lastSpinnedWheel = 'east'; // 记录上次旋转的转盘（east或west）
+
     /**
      * 餐厅数据配置
-     * - 包含餐厅名称、图标、标识符和菜品列表
+     * - 东校餐厅：翰苑、博苑、慧苑
+     * - 西校餐厅：湖苑、雅苑、楠苑
      */
-    const restaurants = [
+    const eastRestaurants = [
         {
             name: '翰苑',
             icon: '🥢',
@@ -619,7 +632,10 @@ document.addEventListener('DOMContentLoaded', function() {
             icon: '🍣',
             id: 'japanese',
             dishes: ['精选寿司拼盘', '豚骨拉面', '天妇罗', '蒲烧鳗鱼']
-        },
+        }
+    ];
+
+    const westRestaurants = [
         {
             name: '湖苑',
             icon: '🍖',
@@ -639,91 +655,170 @@ document.addEventListener('DOMContentLoaded', function() {
             dishes: ['香草拿铁', '卡布奇诺', '冰美式咖啡', '抹茶拿铁']
         }
     ];
-    
+
     /**
-     * 初始化转盘扇区
+     * 初始化东校转盘扇区
      * - 动态生成转盘上的餐厅名称
-     * - 每个扇区占据60度（360度/6个餐厅）
+     * - 每个扇区占据120度（360度/3个餐厅）
      */
-    function initWheel() {
-        if (!wheelInner) return;
-        
+    function initEastWheel() {
+        if (!eastWheelInner) return;
+
         // 清空现有内容
-        wheelInner.innerHTML = '';
-        
+        eastWheelInner.innerHTML = '';
+
         // 为每个餐厅创建扇区
-        restaurants.forEach(function(restaurant, index) {
+        eastRestaurants.forEach(function(restaurant, index) {
             // 创建扇区元素
             const sector = document.createElement('div');
             sector.className = 'wheel-sector';
-            
+
             // 计算扇区旋转角度
-            // 每个扇区60度，从顶部开始，偏移30度使文字居中
-            const rotation = index * 60 + 30;
+            // 每个扇区120度，从顶部开始，偏移60度使文字居中
+            const rotation = index * 120 + 60;
             sector.style.transform = `rotate(${rotation}deg)`;
-            
+
             // 设置扇区内容
             sector.innerHTML = `<span>${restaurant.icon} ${restaurant.name}</span>`;
-            
+
             // 添加到转盘
-            wheelInner.appendChild(sector);
+            eastWheelInner.appendChild(sector);
         });
     }
-    
+
+    /**
+     * 初始化西校转盘扇区
+     * - 动态生成转盘上的餐厅名称
+     * - 每个扇区占据120度（360度/3个餐厅）
+     */
+    function initWestWheel() {
+        if (!westWheelInner) return;
+
+        // 清空现有内容
+        westWheelInner.innerHTML = '';
+
+        // 为每个餐厅创建扇区
+        westRestaurants.forEach(function(restaurant, index) {
+            // 创建扇区元素
+            const sector = document.createElement('div');
+            sector.className = 'wheel-sector';
+
+            // 计算扇区旋转角度
+            // 每个扇区120度，从顶部开始，偏移60度使文字居中
+            const rotation = index * 120 + 60;
+            sector.style.transform = `rotate(${rotation}deg)`;
+
+            // 设置扇区内容
+            sector.innerHTML = `<span>${restaurant.icon} ${restaurant.name}</span>`;
+
+            // 添加到转盘
+            westWheelInner.appendChild(sector);
+        });
+    }
+
     // 初始化转盘
-    initWheel();
+    initEastWheel();
+    initWestWheel();
     
     /**
-     * 转盘旋转函数
+     * 东校转盘旋转函数
      * - 计算随机旋转角度
      * - 应用旋转动画
      * - 返回抽中的餐厅索引
      * @returns {number} - 抽中的餐厅索引
      */
-    function spinWheel() {
+    function spinEastWheel() {
         // 如果正在旋转，直接返回
-        if (isSpinning) return;
-        
+        if (isEastSpinning) return;
+
         // 设置旋转状态
-        isSpinning = true;
-        
+        isEastSpinning = true;
+        lastSpinnedWheel = 'east'; // 记录当前旋转的转盘
+
         // 计算随机角度
         // 基础旋转：至少旋转5圈（1800度）
         // 随机角度：0-360度之间的随机值
         const baseRotation = 1800; // 5圈
         const randomAngle = Math.random() * 360;
-        const totalRotation = currentRotation + baseRotation + randomAngle;
-        
+        const totalRotation = eastCurrentRotation + baseRotation + randomAngle;
+
         // 应用旋转
-        if (wheel) {
-            wheel.style.transform = `rotate(${totalRotation}deg)`;
+        if (eastWheel) {
+            eastWheel.style.transform = `rotate(${totalRotation}deg)`;
         }
-        
+
         // 更新当前旋转角度
-        currentRotation = totalRotation;
-        
+        eastCurrentRotation = totalRotation;
+
         // 计算抽中的餐厅索引
         // 指针在顶部（0度位置），需要计算转盘停止后哪个扇区在顶部
         // 由于转盘顺时针旋转，需要用360减去实际角度
+        // 每个扇区120度（3个餐厅）
         const normalizedAngle = (360 - (totalRotation % 360)) % 360;
-        const selectedIndex = Math.floor(normalizedAngle / 60);
-        
+        const selectedIndex = Math.floor(normalizedAngle / 120);
+
         // 4秒后（动画结束）显示结果
         setTimeout(function() {
-            isSpinning = false;
-            showResult(selectedIndex);
+            isEastSpinning = false;
+            showEastResult(selectedIndex);
         }, 4000);
-        
+
         return selectedIndex;
     }
-    
+
     /**
-     * 显示抽取结果
+     * 西校转盘旋转函数
+     * - 计算随机旋转角度
+     * - 应用旋转动画
+     * - 返回抽中的餐厅索引
+     * @returns {number} - 抽中的餐厅索引
+     */
+    function spinWestWheel() {
+        // 如果正在旋转，直接返回
+        if (isWestSpinning) return;
+
+        // 设置旋转状态
+        isWestSpinning = true;
+        lastSpinnedWheel = 'west'; // 记录当前旋转的转盘
+
+        // 计算随机角度
+        // 基础旋转：至少旋转5圈（1800度）
+        // 随机角度：0-360度之间的随机值
+        const baseRotation = 1800; // 5圈
+        const randomAngle = Math.random() * 360;
+        const totalRotation = westCurrentRotation + baseRotation + randomAngle;
+
+        // 应用旋转
+        if (westWheel) {
+            westWheel.style.transform = `rotate(${totalRotation}deg)`;
+        }
+
+        // 更新当前旋转角度
+        westCurrentRotation = totalRotation;
+
+        // 计算抽中的餐厅索引
+        // 指针在顶部（0度位置），需要计算转盘停止后哪个扇区在顶部
+        // 由于转盘顺时针旋转，需要用360减去实际角度
+        // 每个扇区120度（3个餐厅）
+        const normalizedAngle = (360 - (totalRotation % 360)) % 360;
+        const selectedIndex = Math.floor(normalizedAngle / 120);
+
+        // 4秒后（动画结束）显示结果
+        setTimeout(function() {
+            isWestSpinning = false;
+            showWestResult(selectedIndex);
+        }, 4000);
+
+        return selectedIndex;
+    }
+
+    /**
+     * 显示东校抽取结果
      * @param {number} restaurantIndex - 餐厅索引
      */
-    function showResult(restaurantIndex) {
+    function showEastResult(restaurantIndex) {
         // 获取抽中的餐厅
-        const selectedRestaurant = restaurants[restaurantIndex];
+        const selectedRestaurant = eastRestaurants[restaurantIndex];
 
         // 获取抽取模式（餐厅、档口或菜品）
         const wheelMode = document.querySelector('input[name="wheelMode"]:checked');
@@ -738,10 +833,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedStall = `档口${randomStallIndex}`;
 
         // 获取结果展示元素
-        const resultTitle = wheelResult.querySelector('.result-title');
-        const resultRestaurant = wheelResult.querySelector('.result-restaurant');
-        const resultDish = wheelResult.querySelector('.result-dish');
-        const resultCelebration = wheelResult.querySelector('.result-celebration');
+        const resultTitle = eastWheelResult.querySelector('.result-title');
+        const resultRestaurant = eastWheelResult.querySelector('.result-restaurant');
+        const resultDish = eastWheelResult.querySelector('.result-dish');
+        const resultCelebration = eastWheelResult.querySelector('.result-celebration');
 
         // 更新结果内容
         if (resultCelebration) {
@@ -777,11 +872,102 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // 显示"查看菜品"按钮
-        if (viewDishBtn) {
-            viewDishBtn.classList.remove('hidden');
+        if (eastViewDishBtn) {
+            eastViewDishBtn.classList.remove('hidden');
 
             // 为按钮添加点击事件，跳转到对应餐厅
-            viewDishBtn.onclick = function() {
+            eastViewDishBtn.onclick = function() {
+                // 筛选显示对应餐厅
+                filterRestaurants(selectedRestaurant.id);
+
+                // 滚动到餐厅区域
+                const restaurantsSection = document.getElementById('restaurants');
+                if (restaurantsSection) {
+                    const navHeight = document.querySelector('.header').offsetHeight;
+                    let scrollPosition = restaurantsSection.offsetTop - navHeight - 20;
+
+                    // 如果是档口模式，滚动到具体档口
+                    if (mode === 'stall') {
+                        const stallSection = document.querySelector(`[data-restaurant="${selectedRestaurant.id}"] .stall-section:nth-child(${randomStallIndex + 1})`);
+                        if (stallSection) {
+                            scrollPosition = stallSection.offsetTop - navHeight - 20;
+                        }
+                    }
+
+                    window.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+        }
+    }
+
+    /**
+     * 显示西校抽取结果
+     * @param {number} restaurantIndex - 餐厅索引
+     */
+    function showWestResult(restaurantIndex) {
+        // 获取抽中的餐厅
+        const selectedRestaurant = westRestaurants[restaurantIndex];
+
+        // 获取抽取模式（餐厅、档口或菜品）
+        const wheelMode = document.querySelector('input[name="wheelMode"]:checked');
+        const mode = wheelMode ? wheelMode.value : 'restaurant';
+
+        // 随机选择一道菜品
+        const randomDishIndex = Math.floor(Math.random() * selectedRestaurant.dishes.length);
+        const selectedDish = selectedRestaurant.dishes[randomDishIndex];
+
+        // 随机选择一个档口（1-35）
+        const randomStallIndex = Math.floor(Math.random() * 35) + 1;
+        const selectedStall = `档口${randomStallIndex}`;
+
+        // 获取结果展示元素
+        const resultTitle = westWheelResult.querySelector('.result-title');
+        const resultRestaurant = westWheelResult.querySelector('.result-restaurant');
+        const resultDish = westWheelResult.querySelector('.result-dish');
+        const resultCelebration = westWheelResult.querySelector('.result-celebration');
+
+        // 更新结果内容
+        if (resultCelebration) {
+            resultCelebration.textContent = '🎊';
+        }
+
+        if (resultTitle) {
+            resultTitle.textContent = '恭喜您抽中了';
+        }
+
+        if (resultRestaurant) {
+            resultRestaurant.textContent = `${selectedRestaurant.icon} ${selectedRestaurant.name}`;
+        }
+
+        // 根据模式显示不同内容
+        if (mode === 'dish') {
+            if (resultDish) {
+                resultDish.textContent = `推荐菜品：${selectedDish}`;
+            }
+
+            // 显示菜品特写模态框
+            setTimeout(function() {
+                showFeaturedDish(selectedRestaurant, selectedDish);
+            }, 500);
+        } else if (mode === 'stall') {
+            if (resultDish) {
+                resultDish.textContent = `推荐档口：${selectedStall}`;
+            }
+        } else {
+            if (resultDish) {
+                resultDish.textContent = '快去探索美味吧！';
+            }
+        }
+
+        // 显示"查看菜品"按钮
+        if (westViewDishBtn) {
+            westViewDishBtn.classList.remove('hidden');
+
+            // 为按钮添加点击事件，跳转到对应餐厅
+            westViewDishBtn.onclick = function() {
                 // 筛选显示对应餐厅
                 filterRestaurants(selectedRestaurant.id);
 
@@ -1032,10 +1218,14 @@ document.addEventListener('DOMContentLoaded', function() {
             featuredSpinAgainBtn.onclick = function() {
                 // 关闭特写模态框
                 closeFeaturedModal();
-                
-                // 再次旋转转盘
+
+                // 根据上次旋转的转盘，再次旋转对应的转盘
                 setTimeout(function() {
-                    spinWheel();
+                    if (lastSpinnedWheel === 'east') {
+                        spinEastWheel();
+                    } else {
+                        spinWestWheel();
+                    }
                 }, 300);
             };
         }
@@ -1081,22 +1271,43 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     /**
-     * 转盘中心按钮点击事件
+     * 东校转盘中心按钮点击事件
      */
-    if (wheelCenter) {
-        wheelCenter.addEventListener('click', function() {
-            spinWheel();
+    if (eastWheelCenter) {
+        eastWheelCenter.addEventListener('click', function() {
+            spinEastWheel();
         });
     }
-    
+
     /**
-     * 转盘整体点击事件（备用）
+     * 东校转盘整体点击事件（备用）
      */
-    if (wheel) {
-        wheel.addEventListener('click', function(event) {
+    if (eastWheel) {
+        eastWheel.addEventListener('click', function(event) {
             // 如果点击的不是中心按钮，也触发旋转
             if (!event.target.closest('.wheel-center')) {
-                spinWheel();
+                spinEastWheel();
+            }
+        });
+    }
+
+    /**
+     * 西校转盘中心按钮点击事件
+     */
+    if (westWheelCenter) {
+        westWheelCenter.addEventListener('click', function() {
+            spinWestWheel();
+        });
+    }
+
+    /**
+     * 西校转盘整体点击事件（备用）
+     */
+    if (westWheel) {
+        westWheel.addEventListener('click', function(event) {
+            // 如果点击的不是中心按钮，也触发旋转
+            if (!event.target.closest('.wheel-center')) {
+                spinWestWheel();
             }
         });
     }
