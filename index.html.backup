@@ -1,56 +1,107 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!--
+    <!-- 
         ============================================
-        转盘主页面
+        页面元信息配置区域
         ============================================
-        - 作为网站入口页面
-        - 包含双转盘功能（东校/西校）
-        - 提供餐厅导航入口
+        - charset: 设置字符编码为UTF-8，支持中文显示
+        - viewport: 响应式布局必备，确保移动端正确显示
+        - description: SEO优化的页面描述
+        - title: 浏览器标签页显示的标题
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="下一顿吃什么 - 幸运转盘帮你决定">
-    <title>下一顿吃什么 - 幸运转盘</title>
-
+    <meta name="description" content="下一顿吃什么 - 六大特色餐厅精选菜品展示">
+    <title>下一顿吃什么 - 六大特色餐厅</title>
+    
+    <!-- 
+        ============================================
+        样式文件引入
+        ============================================
+        - 引入外部CSS样式文件
+        - 使用rel="stylesheet"表明这是样式表
+    -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!--
+    <!-- 
         ============================================
         页面顶部导航栏区域
         ============================================
+        - 包含网站Logo和导航菜单
+        - 采用固定定位，滚动时始终可见
     -->
     <header class="header">
+        <!-- 网站Logo和品牌名称 -->
         <div class="logo">
             <span class="logo-icon">🍽️</span>
             <h1 class="logo-text">下一顿吃什么</h1>
         </div>
-
+        
+        <!-- 主导航菜单 -->
         <nav class="nav">
             <ul class="nav-list">
+                <!--
+                    导航菜单项
+                    - data-restaurant: 自定义数据属性，用于JavaScript识别餐厅
+                    - class="active": 默认激活状态，显示当前选中项
+                -->
                 <li class="nav-item">
-                    <a href="hanyuan.html" class="nav-link" data-restaurant="hanyuan">翰苑</a>
+                    <a href="#" class="nav-link active" data-restaurant="all">全部餐厅</a>
                 </li>
-                <li class="nav-item">
-                    <a href="boyuan.html" class="nav-link" data-restaurant="boyuan">博苑</a>
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link" data-restaurant="chinese">翰苑</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-restaurant="chinese" data-floor="1">一楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="chinese" data-floor="2">二楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="chinese" data-floor="3">三楼</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="huiyuan.html" class="nav-link" data-restaurant="huiyuan">慧苑</a>
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link" data-restaurant="western">博苑</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-restaurant="western" data-floor="1">一楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="western" data-floor="2">二楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="western" data-floor="3">三楼</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="huyuan.html" class="nav-link" data-restaurant="huyuan">湖苑</a>
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link" data-restaurant="japanese">慧苑</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-restaurant="japanese" data-floor="1">一楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="japanese" data-floor="2">二楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="japanese" data-floor="3">三楼</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="yayuan.html" class="nav-link" data-restaurant="yayuan">雅苑</a>
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link" data-restaurant="korean">湖苑</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-restaurant="korean" data-floor="1">一楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="korean" data-floor="2">二楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="korean" data-floor="3">三楼</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="nanyuan.html" class="nav-link" data-restaurant="nanyuan">楠苑</a>
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link" data-restaurant="dessert">雅苑</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-restaurant="dessert" data-floor="1">一楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="dessert" data-floor="2">二楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="dessert" data-floor="3">三楼</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item has-dropdown">
+                    <a href="#" class="nav-link" data-restaurant="cafe">楠苑</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-restaurant="cafe" data-floor="1">一楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="cafe" data-floor="2">二楼</a></li>
+                        <li><a href="#" class="dropdown-link" data-restaurant="cafe" data-floor="3">三楼</a></li>
+                    </ul>
                 </li>
             </ul>
         </nav>
-
+        
+        <!-- 移动端菜单切换按钮 -->
         <button class="menu-toggle" aria-label="切换菜单">
             <span class="hamburger"></span>
         </button>
@@ -60,23 +111,31 @@
         ============================================
         页面横幅区域（Hero Section）
         ============================================
+        - 展示网站主题和欢迎信息
+        - 使用液态以太背景效果
     -->
     <section class="hero">
+        <!-- 液态背景Canvas -->
         <canvas id="liquidBackground" class="liquid-canvas"></canvas>
         <div class="hero-content">
             <h2 class="hero-title">探索六大特色餐厅</h2>
             <p class="hero-subtitle">精选美食，品质生活，尽在下一顿吃什么</p>
-            <a href="#luckyWheel" class="hero-btn">开始探索</a>
+            <a href="#restaurants" class="hero-btn">开始探索</a>
         </div>
     </section>
 
-    <!--
+    <!-- 
         ============================================
         幸运转盘抽取区域（双转盘：东校和西校）
         ============================================
+        - 提供随机抽取菜品功能
+        - 帮助用户解决选择困难
+        - 东校转盘：翰苑、博苑、慧苑
+        - 西校转盘：湖苑、雅苑、楠苑
     -->
-    <section class="lucky-wheel-section" id="luckyWheel">
+    <section class="lucky-wheel-section">
         <div class="wheel-container">
+            <!-- 区域标题 -->
             <div class="wheel-header">
                 <h2 class="wheel-title">
                     <span class="wheel-icon">🎰</span>
@@ -84,16 +143,23 @@
                 </h2>
                 <p class="wheel-subtitle">不知道吃什么？让转盘帮你决定！</p>
             </div>
-
+            
+            <!-- 双转盘布局 -->
             <div class="dual-wheels-container">
-                <!-- 东校转盘 -->
+                <!-- 
+                    ========================================
+                    东校转盘
+                    ========================================
+                    - 包含：翰苑、博苑、慧苑
+                -->
                 <div class="wheel-section-wrapper">
                     <div class="wheel-section-header">
                         <h3 class="wheel-section-title">🏫 东校区</h3>
                         <p class="wheel-section-desc">翰苑 · 博苑 · 慧苑</p>
                     </div>
-
+                    
                     <div class="wheel-and-result">
+                        <!-- 转盘主体区域 -->
                         <div class="wheel-wrapper">
                             <div class="wheel" id="eastWheel">
                                 <div class="wheel-inner">
@@ -103,12 +169,13 @@
                                     <span class="wheel-center-text">开始</span>
                                 </div>
                             </div>
-
+                            
                             <div class="wheel-pointer">
                                 <div class="pointer-arrow"></div>
                             </div>
                         </div>
-
+                        
+                        <!-- 抽取结果展示区域 -->
                         <div class="wheel-result-card" id="eastWheelResult">
                             <div class="result-celebration">🎊</div>
                             <h3 class="result-title">点击转盘开始抽取</h3>
@@ -120,15 +187,21 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 西校转盘 -->
+                
+                <!-- 
+                    ========================================
+                    西校转盘
+                    ========================================
+                    - 包含：湖苑、雅苑、楠苑
+                -->
                 <div class="wheel-section-wrapper">
                     <div class="wheel-section-header">
                         <h3 class="wheel-section-title">🏫 西校区</h3>
                         <p class="wheel-section-desc">湖苑 · 雅苑 · 楠苑</p>
                     </div>
-
+                    
                     <div class="wheel-and-result">
+                        <!-- 转盘主体区域 -->
                         <div class="wheel-wrapper">
                             <div class="wheel" id="westWheel">
                                 <div class="wheel-inner">
@@ -138,12 +211,13 @@
                                     <span class="wheel-center-text">开始</span>
                                 </div>
                             </div>
-
+                            
                             <div class="wheel-pointer">
                                 <div class="pointer-arrow"></div>
                             </div>
                         </div>
-
+                        
+                        <!-- 抽取结果展示区域 -->
                         <div class="wheel-result-card" id="westWheelResult">
                             <div class="result-celebration">🎊</div>
                             <h3 class="result-title">点击转盘开始抽取</h3>
@@ -157,8 +231,11 @@
                 </div>
             </div>
         </div>
-
-        <!-- 抽取模式选择 -->
+        
+        <!-- 
+            抽取模式选择（底部）
+            - 可选择抽取餐厅、档口或具体菜品
+        -->
         <div class="wheel-options">
             <label class="option-label">
                 <input type="radio" name="wheelMode" value="restaurant" checked>
@@ -175,13 +252,36 @@
         </div>
     </section>
 
+    <!-- 
+        ============================================
+        主要内容区域
+        ============================================
+        - 包含所有餐厅的菜品展示
+        - 使用section标签语义化划分不同餐厅
+    -->
+    <main id="restaurants" class="main-content">
+        
+        <!-- 
+            ========================================
+            餐厅菜品展示区域
+            ========================================
+            - 由JavaScript动态生成
+            - 每个餐厅35个档口，每个档口10道菜
+            - 总计：6 × 35 × 10 = 2100道菜
+        -->
+        <div id="restaurantsContainer"></div>
+
+    </main>
+
     <!--
         ============================================
         页脚区域
         ============================================
+        - 包含版权信息、联系方式、社交媒体链接
     -->
     <footer class="footer">
         <div class="footer-content">
+            <!-- 关于我们 -->
             <div class="footer-section">
                 <h3 class="footer-title">关于下一顿吃什么</h3>
                 <p class="footer-text">
@@ -189,6 +289,7 @@
                 </p>
             </div>
 
+            <!-- 联系方式 -->
             <div class="footer-section">
                 <h3 class="footer-title">联系我们</h3>
                 <ul class="footer-list">
@@ -198,6 +299,7 @@
                 </ul>
             </div>
 
+            <!-- 社交媒体 -->
             <div class="footer-section">
                 <h3 class="footer-title">关注我们</h3>
                 <div class="social-links">
@@ -209,40 +311,72 @@
             </div>
         </div>
 
+        <!-- 版权信息 -->
         <div class="footer-bottom">
             <p>&copy; 2026 下一顿吃什么 eat what food next time.</p>
         </div>
     </footer>
 
-    <!--
+    <!-- 
         ============================================
-        菜品特写模态框
+        菜品详情模态框（弹窗）
         ============================================
+        - 点击"查看详情"按钮时显示
+        - 包含菜品的详细信息
+    -->
+    <div id="dishModal" class="modal">
+        <div class="modal-content">
+            <!-- 关闭按钮 -->
+            <span class="modal-close">&times;</span>
+            <!-- 模态框内容将通过JavaScript动态填充 -->
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="" class="modal-image">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <p id="modalDesc" class="modal-desc"></p>
+                <p id="modalPrice" class="modal-price"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        ============================================
+        菜品特写模态框（大图展示）
+        ============================================
+        - 转盘抽中菜品后显示
+        - 大图展示抽中的菜品
+        - 包含菜品详细信息和动画效果
     -->
     <div id="featuredDishModal" class="featured-modal">
         <div class="featured-modal-content">
+            <!-- 关闭按钮 -->
             <span class="featured-modal-close">&times;</span>
-
+            
+            <!-- 特写内容 -->
             <div class="featured-body">
+                <!-- 庆祝动画 -->
                 <div class="celebration">
                     <span class="confetti">🎉</span>
                     <span class="confetti">🎊</span>
                     <span class="confetti">✨</span>
                     <span class="confetti">🌟</span>
                 </div>
-
+                
+                <!-- 恭喜文字 -->
                 <h2 class="featured-congrats">恭喜您抽中了！</h2>
-
+                
+                <!-- 餐厅信息 -->
                 <div class="featured-restaurant">
                     <span class="featured-restaurant-icon"></span>
                     <span class="featured-restaurant-name"></span>
                 </div>
-
+                
+                <!-- 菜品大图 -->
                 <div class="featured-image-container">
                     <img id="featuredImage" src="" alt="" class="featured-image">
                     <div class="featured-image-overlay"></div>
                 </div>
-
+                
+                <!-- 菜品信息 -->
                 <div class="featured-info">
                     <h3 id="featuredDishName" class="featured-dish-name"></h3>
                     <p id="featuredDishDesc" class="featured-dish-desc"></p>
@@ -251,7 +385,8 @@
                         <span id="featuredPrice" class="featured-price"></span>
                     </div>
                 </div>
-
+                
+                <!-- 操作按钮 -->
                 <div class="featured-actions">
                     <button id="featuredViewBtn" class="featured-btn featured-btn-primary">
                         <span class="btn-icon">🍽️</span>
@@ -268,33 +403,14 @@
 
     <!--
         ============================================
-        排行榜切换按钮
-        ============================================
-    -->
-    <button id="rankingToggle" class="ranking-toggle-btn" aria-label="切换排行榜">
-        <span class="toggle-icon">🏆</span>
-        <span class="toggle-text">排行榜</span>
-    </button>
-
-    <!--
-        ============================================
-        排行榜侧边栏
-        ============================================
-    -->
-    <aside id="rankingSidebar" class="ranking-sidebar">
-        <!-- 排行榜内容将通过JavaScript动态生成 -->
-    </aside>
-
-    <!--
-        ============================================
         JavaScript文件引入
         ============================================
+        - 放在body末尾，确保DOM加载完成后再执行
+        - 先引入数据文件，再引入主脚本
     -->
-    <script src="data/restaurant-data.js"></script>
-    <script src="js/common.js"></script>
-    <script src="js/wheel.js"></script>
-    <script src="js/ranking.js"></script>
-    <script src="js/ranking-ui.js"></script>
+    <script src="hanyuan-data.js"></script>
+    <script src="restaurant-data.js"></script>
+    <script src="script.js"></script>
     <script src="liquid-background.js"></script>
 </body>
 </html>

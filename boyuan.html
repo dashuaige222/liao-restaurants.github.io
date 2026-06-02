@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="博苑 - 正宗西式料理，优雅用餐体验">
+    <title>博苑 - 西式料理</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="index.html" class="back-to-wheel">← 返回转盘</a>
+            <span class="logo-icon">🍽️</span>
+            <h1 class="logo-text">下一顿吃什么</h1>
+        </div>
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="hanyuan.html" class="nav-link">翰苑</a></li>
+                <li class="nav-item"><a href="boyuan.html" class="nav-link active">博苑</a></li>
+                <li class="nav-item"><a href="huiyuan.html" class="nav-link">慧苑</a></li>
+                <li class="nav-item"><a href="huyuan.html" class="nav-link">湖苑</a></li>
+                <li class="nav-item"><a href="yayuan.html" class="nav-link">雅苑</a></li>
+                <li class="nav-item"><a href="nanyuan.html" class="nav-link">楠苑</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="切换菜单"><span class="hamburger"></span></button>
+    </header>
+
+    <section class="restaurant-hero">
+        <div class="restaurant-hero-content">
+            <h2 class="restaurant-hero-title"><span class="restaurant-icon">🍝</span>博苑</h2>
+            <p class="restaurant-hero-desc">正宗西式料理，优雅用餐体验</p>
+            <p class="restaurant-hero-stats">共 35 个档口，350 道菜品</p>
+        </div>
+    </section>
+
+    <main id="restaurantContainer" class="main-content"></main>
+
+    <div id="dishModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="" class="modal-image">
+                <h2 id="modalTitle" class="modal-title"></h2>
+                <p id="modalDesc" class="modal-desc"></p>
+                <p id="modalPrice" class="modal-price"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">关于下一顿吃什么</h3>
+                <p class="footer-text">下一顿吃什么汇聚六大特色餐厅——翰苑、博苑、慧苑、湖苑、雅苑、楠苑，帮你做出选择。</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">联系我们</h3>
+                <ul class="footer-list">
+                    <li>📍 地址：东校区many stars 16 118</li>
+                    <li>📞 电话：15610630910</li>
+                    <li>📧 邮箱：3151647844@qq.com</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">关注我们</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">💬</a>
+                    <a href="#" class="social-link">📱</a>
+                    <a href="#" class="social-link">🎵</a>
+                    <a href="#" class="social-link">📕</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2026 下一顿吃什么 eat what food next time.</p></div>
+    </footer>
+
+    <button id="rankingToggle" class="ranking-toggle-btn" aria-label="切换排行榜">
+        <span class="toggle-icon">🏆</span>
+        <span class="toggle-text">排行榜</span>
+    </button>
+    <aside id="rankingSidebar" class="ranking-sidebar"></aside>
+
+    <script src="data/restaurant-data.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/restaurant.js"></script>
+    <script src="js/ranking.js"></script>
+    <script src="js/ranking-ui.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof generateAllRestaurantsData !== 'undefined') {
+                const allData = generateAllRestaurantsData();
+                renderRestaurant(allData.western, 'restaurantContainer');
+            } else {
+                console.error('未找到餐厅数据');
+            }
+        });
+    </script>
+</body>
+</html>
